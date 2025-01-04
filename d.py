@@ -63,7 +63,7 @@ if location and location.ok:
 else:
     city, state, lat, lng = None, None, None, None
 
-user_loc = f"Hello user, do you know the exact latitude and longitude of your current location? " \
+user_loc = f"Hello user, what's the latitude and longitude of your current location? " \
            f"You are currently in {city}, {state}. Your Latitude is {lat}, your Longitude is {lng}."
 
 
