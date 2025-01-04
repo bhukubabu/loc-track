@@ -1,2 +1,3 @@
 espeak
+pyaudio
 libespeak-dev
