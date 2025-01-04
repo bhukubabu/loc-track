@@ -41,11 +41,11 @@ def load_lottie(path):
 
 
 def play_audio(file_path):
-    #engine=pyttsx3.init()
-    #engine.say(file_path)
-    #engine.runAndWait()
+    engine=pyttsx3.init()
+    engine.say(file_path)
+    engine.runAndWait()
     
-    os.system(f"start {file_path}")
+    #os.system(f"start {file_path}")
     
     #if system_name == "Darwin":  # macOS
         #os.system(f"afplay {file_path}")
