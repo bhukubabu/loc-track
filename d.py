@@ -3,6 +3,7 @@ import geocoder
 import json
 import time
 import os
+import pyttsx3
 import tempfile
 import threading
 from gtts import gTTS
@@ -42,15 +43,18 @@ import os
 import platform
 
 def play_audio(file_path):
-    system_name = platform.system()
-    if system_name == "Darwin":  # macOS
-        os.system(f"afplay {file_path}")
+    engine=pyttsx3.init()
+    engine.say(file_path)
+    engine.runAndWait()
+    #system_name = platform.system()
+    #if system_name == "Darwin":  # macOS
+        #os.system(f"afplay {file_path}")
     #elif system_name == "Linux":  # Linux
         #os.system(f"mpg123 {file_path}")  # aplay is a common Linux audio player
-    elif system_name == "Windows":  # Windows
-        os.system(f'start "{file_path}"')  # Double quotes handle spaces in the path
-    else:
-        st.write("Unsupported OS for audio playback.")
+    #elif system_name == "Windows":  # Windows
+        #os.system(f'start "{file_path}"')  # Double quotes handle spaces in the path
+    #else:
+        #st.write("Unsupported OS for audio playback.")
 
 
 # Main app
@@ -73,7 +77,7 @@ if os.path.exists(audio_file_path):
     os.remove(audio_file_path)
 audio.save(audio_file_path)
 # Play audio in a separate thread
-audio_thread = threading.Thread(target=play_audio, args=(audio_file_path,))
+audio_thread = threading.Thread(target=play_audio, args=(user_loc,))
 audio_thread.start()
 
 # Lottie animation spinner
