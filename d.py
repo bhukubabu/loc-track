@@ -5,7 +5,7 @@ import time
 import os
 import pyttsx3
 import threading
-from playsound import playsound
+#from playsound import playsound
 from gtts import gTTS
 import streamlit as st
 from streamlit_lottie import st_lottie_spinner
