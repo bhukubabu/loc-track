@@ -44,8 +44,7 @@ def play_audio(file_path):
     #engine=pyttsx3.init()
     #engine.say(file_path)
     #engine.runAndWait()
-    system_name = platform.system()
-    st.markdown(system_name)
+    
     os.system(f"start {file_path}")
     
     #if system_name == "Darwin":  # macOS
@@ -62,7 +61,8 @@ def main_interface(location,user_loc):
     # Play audio in a separate thread
     audio_thread = threading.Thread(target=play_audio, args=({f"hiii {user_loc}"},))
     audio_thread.start()
-
+    system_name = platform.system()
+    st.markdown(system_name)
     # Lottie animation spinner
     if "key" not in st.session_state:
         st.session_state.key = True
