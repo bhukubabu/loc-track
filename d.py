@@ -46,7 +46,7 @@ def play_audio(file_path):
     if system_name == "Darwin":  # macOS
         os.system(f"afplay {file_path}")
     elif system_name == "Linux":  # Linux
-        os.system(f"aplay {file_path}")  # aplay is a common Linux audio player
+        os.system(f"mpg123 {file_path}")  # aplay is a common Linux audio player
     elif system_name == "Windows":  # Windows
         os.system(f'start "{file_path}"')  # Double quotes handle spaces in the path
     else:
