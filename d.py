@@ -1,4 +1,5 @@
 import folium
+import espeak
 import geocoder
 import json
 import time
