@@ -91,11 +91,15 @@ else:
 
 user_loc = f"Hello user, what's the latitude and longitude of your current location? " \
            f"You are currently in {city}, {state}. Your Latitude is {lat}, your Longitude is {lng}."
-audio=gTTS(text=user_loc,lang="en")
-path="audio_op.mp3"
-if os.path.exists(path):
-    os.remove(path)
-audio.save(path)
+try:
+    audio=gTTS(text=user_loc,lang="en")
+    path="audio_op.mp3"
+    if os.path.exists(path):
+        os.remove(path)
+    audio.save(path)
+    st.write("success")
+except :
+    st.error("failed")
 main_interface(location,path)
 
 
