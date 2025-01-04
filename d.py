@@ -1,5 +1,5 @@
 import folium
-import espeak
+#import espeak
 import geocoder
 import json
 import time
@@ -44,7 +44,7 @@ import os
 import platform
 
 def play_audio(file_path):
-    engine=pyttsx3.init()
+    engine=pyttsx3.init(driverName='sapi5')
     engine.say(file_path)
     engine.runAndWait()
     #system_name = platform.system()
