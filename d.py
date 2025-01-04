@@ -7,7 +7,7 @@ import platform
 import pyttsx3
 import tempfile
 import threading
-#from gtts import gTTS
+from gtts import gTTS
 import streamlit as st
 from streamlit_lottie import st_lottie_spinner
 import streamlit.components.v1 as components
@@ -91,7 +91,11 @@ else:
 
 user_loc = f"Hello user, what's the latitude and longitude of your current location? " \
            f"You are currently in {city}, {state}. Your Latitude is {lat}, your Longitude is {lng}."
-
-main_interface(location,user_loc)
+audio=gTTS(text=user_loc,lang="en")
+path="audio_op.mp3"
+if os.path.exists(path):
+    os.remove(path)
+audio.save(path)
+main_interface(location,path)
 
 
