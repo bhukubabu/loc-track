@@ -69,9 +69,9 @@ user_loc = f"Hello user, do you know the exact latitude and longitude of your cu
 
 audio=gTTS(text=user_loc,lang="en")
 audio_file_path="audio_op.mp3"
-if os.path.exists(path):
-    os.remove(path)
-audio.save(path)
+if os.path.exists(audio_file_path):
+    os.remove(audio_file_path)
+audio.save(audio_file_path)
 # Play audio in a separate thread
 audio_thread = threading.Thread(target=play_audio, args=(audio_file_path,))
 audio_thread.start()
