@@ -3,6 +3,7 @@ import geocoder
 import json
 import time
 import os
+import platform
 import pyttsx3
 import tempfile
 import threading
@@ -43,8 +44,10 @@ def play_audio(file_path):
     #engine=pyttsx3.init()
     #engine.say(file_path)
     #engine.runAndWait()
-    os.system(f"espeak {file_path}")
-    #system_name = platform.system()
+    system_name = platform.system()
+    st.markdown(system_name)
+    os.system(f"start {file_path}")
+    
     #if system_name == "Darwin":  # macOS
         #os.system(f"afplay {file_path}")
     #elif system_name == "Linux":  # Linux
