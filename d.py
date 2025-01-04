@@ -38,8 +38,19 @@ def load_lottie(path):
         return json.load(file)
 
 
+import os
+import platform
+
 def play_audio(file_path):
-    os.system(f"start {file_path}")
+    system_name = platform.system()
+    if system_name == "Darwin":  # macOS
+        os.system(f"afplay {file_path}")
+    elif system_name == "Linux":  # Linux
+        os.system(f"aplay {file_path}")  # aplay is a common Linux audio player
+    elif system_name == "Windows":  # Windows
+        os.system(f'start "{file_path}"')  # Double quotes handle spaces in the path
+    else:
+        print("Unsupported OS for audio playback.")
 
 
 # Main app
