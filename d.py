@@ -39,7 +39,7 @@ def load_lottie(path):
 
 
 def play_audio(file_path):
-    os.system(f"start {file_path}" if os.name == 'nt' else f"afplay {file_path}")
+    os.system(f"start {file_path}")
 
 
 # Main app
