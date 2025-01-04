@@ -71,7 +71,7 @@ user_loc = f"Hello user, what's the latitude and longitude of your current locat
            f"You are currently in {city}, {state}. Your Latitude is {lat}, your Longitude is {lng}."
 
 # Play audio in a separate thread
-audio_thread = threading.Thread(target=play_audio, args=(f{"hiii {user_loc}"},))
+audio_thread = threading.Thread(target=play_audio, args=({f"hiii {user_loc}"},))
 audio_thread.start()
 
 # Lottie animation spinner
