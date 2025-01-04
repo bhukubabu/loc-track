@@ -45,7 +45,7 @@ def play_audio(file_path):
     #engine.say(file_path)
     #engine.runAndWait()
     
-    os.system("aplay "+file_path)
+    os.system(f'aplay "{file_path}"')
     
     #if system_name == "Darwin":  # macOS
         #os.system(f"afplay {file_path}")
