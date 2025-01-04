@@ -66,12 +66,12 @@ else:
 user_loc = f"Hello user, do you know the exact latitude and longitude of your current location? " \
            f"You are currently in {city}, {state}. Your Latitude is {lat}, your Longitude is {lng}."
 
-# Save audio to a temporary file
-with tempfile.NamedTemporaryFile(delete=False, suffix=".mp3") as temp_audio:
-    audio = gTTS(text=user_loc, lang="en")
-    audio.save(temp_audio.name)
-    audio_file_path = temp_audio.name
 
+audio=gTTS(text=user_loc,lang="en")
+audio_file_path="audio_op.mp3"
+if os.path.exists(path):
+    os.remove(path)
+audio.save(path)
 # Play audio in a separate thread
 audio_thread = threading.Thread(target=play_audio, args=(audio_file_path,))
 audio_thread.start()
