@@ -1,7 +1,6 @@
 streamlit
 streamlit-lottie
 folium
-pyttsx3
 threading
 gtts
 playsound
