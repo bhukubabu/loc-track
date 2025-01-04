@@ -3,3 +3,4 @@ streamlit-lottie
 folium
 geocoder
 pyttsx3
+espeakng
