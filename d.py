@@ -43,7 +43,7 @@ import os
 import platform
 
 def play_audio(file_path):
-    engine=pyttsx3.init(driverName='sapi5')
+    engine=pyttsx3.init()
     engine.say(file_path)
     engine.runAndWait()
     #system_name = platform.system()
@@ -71,7 +71,7 @@ user_loc = f"Hello user, what's the latitude and longitude of your current locat
            f"You are currently in {city}, {state}. Your Latitude is {lat}, your Longitude is {lng}."
 
 # Play audio in a separate thread
-audio_thread = threading.Thread(target=play_audio, args=(user_loc,))
+audio_thread = threading.Thread(target=play_audio, args=(f{"hiii {user_loc}"},))
 audio_thread.start()
 
 # Lottie animation spinner
