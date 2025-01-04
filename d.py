@@ -50,7 +50,7 @@ def play_audio(file_path):
     elif system_name == "Windows":  # Windows
         os.system(f'start "{file_path}"')  # Double quotes handle spaces in the path
     else:
-        print("Unsupported OS for audio playback.")
+        st.write("Unsupported OS for audio playback.")
 
 
 # Main app
