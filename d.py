@@ -1,6 +1,7 @@
 import folium
 import geocoder
 import json
+import requests
 import time
 import os
 import pyttsx3
@@ -10,6 +11,17 @@ from gtts import gTTS
 import streamlit as st
 from streamlit_lottie import st_lottie_spinner
 import streamlit.components.v1 as components
+
+st.cache_data()
+def get_public_ip():
+    try:
+        response = requests.get("https://api.ipify.org?format=json")
+        public_ip = response.json().get("ip")
+        return public_ip
+    except requests.RequestException as e:
+        return f"Error fetching public IP: {e}"
+
+public_ip = get_public_ip()
 
 
 def plot_map(loca):
@@ -49,7 +61,7 @@ def play_audio():
 lottie=load_lottie("Animation - 1735974601572.json")  
 st.title("Where are you ?? 🗺")
 
-location = geocoder.ip('me')
+location = geocoder.ip(public_ip)
 if location and location.ok:
       city,state,lat,lng=location.city,location.state,location.lat,location.lng
 else:
