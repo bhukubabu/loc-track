@@ -14,7 +14,7 @@ import streamlit.components.v1 as components
 
 
 public_ip = get_public_ip()
-
+st.write(public_ip)
 
 def plot_map(loca):
      map_center=[22.5626,88.363]
