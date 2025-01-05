@@ -1,6 +1,5 @@
 import folium
 import json
-import time
 import streamlit as st
 import streamlit.components.v1 as components
 
@@ -56,12 +55,11 @@ components.html(geolocation_script, height=0, width=0)
 # Placeholder for detected location
 location_placeholder = st.empty()
 
-# Wait for geolocation data to be sent back
-location_data = st.experimental_get_query_params().get("location", [None])[0]
-
 # Retrieve location data from the session or the browser's message
 if "location" not in st.session_state:
     st.session_state["location"] = None
+
+location_data = st.query_params.get("location", [None])[0]
 
 if location_data:
     st.session_state["location"] = location_data
