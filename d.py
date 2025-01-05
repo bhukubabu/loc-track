@@ -32,7 +32,21 @@ def interface(location):
         st.warning(f"📍 Latitude: {location.lat}, Longitude: {location.lng}")
     
     with st.expander("Displaying your current location 🗺", expanded=True):
-        components.html(map_html, height=350)
+        #components.html(map_html, height=350)
+        components.html("""
+        <script>
+            navigator.geolocation.getCurrentPosition(
+                function(position) {
+                    const coords = {
+                        lat: position.coords.latitude,
+                        lng: position.coords.longitude
+                    };
+                    const data = JSON.stringify(coords);
+                    window.parent.postMessage(data, "*");
+                }
+            );
+        </script>
+        """)
 
 
 def load_lottie(path):
