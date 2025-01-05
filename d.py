@@ -61,7 +61,11 @@ audio=gTTS(text=user_loc,lang="en")
 path="audio_op.mp3"
 if os.path.exists(path):
     os.remove(path)
-audio.save(path)
+try:
+     audio.save(path)
+     st.success("----")
+except:
+     st.error("XXXX")
 audio_thread=threading.Thread(target=play_audio,args=())
 audio_thread.start()
 
