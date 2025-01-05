@@ -4,6 +4,7 @@ import json
 import requests
 import time
 import os
+import b
 import pyttsx3
 import threading
 from get_ip import get_public_ip
@@ -44,11 +45,8 @@ def load_lottie(path):
             return json.load(rr)
 
 
-def play_audio():
-    #engine=pyttsx3.init()
-    #engine.say(content)
-    #engine.runAndWait()
-    os.system("mpg321 audio_op.mp3")
+def play_audio(content):
+    b.speak(content)
 
 lottie=load_lottie("Animation - 1735974601572.json")  
 st.title("Where are you ?? 🗺")
@@ -70,7 +68,7 @@ try:
      st.success("AUDIO SAVED")
 except:
      st.error("XXXX")
-audio_thread=threading.Thread(target=play_audio,args=())
+audio_thread=threading.Thread(target=play_audio,args=(user_loc,))
 audio_thread.start()
 
 if "key" not in st.session_state:
