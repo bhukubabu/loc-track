@@ -48,7 +48,7 @@ def play_audio():
     #engine=pyttsx3.init()
     #engine.say(content)
     #engine.runAndWait()
-    playsound("audio_op.mp3")
+    os.system("mpg321 audio_op.mp3")
 
 lottie=load_lottie("Animation - 1735974601572.json")  
 st.title("Where are you ?? 🗺")
