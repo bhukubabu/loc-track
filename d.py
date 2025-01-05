@@ -5,10 +5,10 @@ import requests
 import time
 import os
 import b
-import pyttsx3
+#import pyttsx3
 import threading
 from get_ip import get_public_ip
-from gtts import gTTS
+#from gtts import gTTS
 import streamlit as st
 from streamlit_lottie import st_lottie_spinner
 import streamlit.components.v1 as components
@@ -59,10 +59,10 @@ else:
 
 user_loc=f""" Hello user do you know exact latitude and longitude of your current location ?? Your are currently in{city}, {state}. Your Latitude is {lat}, your longitude is {lng}"""
 
-audio=gTTS(text=user_loc,lang="en")
-
-audio_thread=threading.Thread(target=play_audio,args=(user_loc,))
-audio_thread.start()
+#audio=gTTS(text=user_loc,lang="en")
+play_audio(user_loc)
+#audio_thread=threading.Thread(target=play_audio,args=(user_loc,))
+#audio_thread.start()
 
 if "key" not in st.session_state:
       st.session_state.key=True
