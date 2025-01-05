@@ -60,14 +60,7 @@ else:
 user_loc=f""" Hello user do you know exact latitude and longitude of your current location ?? Your are currently in{city}, {state}. Your Latitude is {lat}, your longitude is {lng}"""
 
 audio=gTTS(text=user_loc,lang="en")
-path="audio_op.mp3"
-if os.path.exists(path):
-    os.remove(path)
-try:
-     audio.save(path)
-     st.success("AUDIO SAVED")
-except:
-     st.error("XXXX")
+
 audio_thread=threading.Thread(target=play_audio,args=(user_loc,))
 audio_thread.start()
 
