@@ -1,106 +1,81 @@
 import folium
 import json
 import time
-import os
-import threading
-import platform
 import streamlit as st
 import streamlit.components.v1 as components
 
 
 def plot_map(lat, lng):
-    map_center = [lat, lng]  # Centered on the user's location
-    map_obj = folium.Map(location=map_center, zoom_start=15, control_scale=True, width=700)
+    """Plot a map centered on the given latitude and longitude."""
+    map_center = [lat, lng]
+    map_obj = folium.Map(location=map_center, zoom_start=15, control_scale=True)
     folium.Marker(
         location=[lat, lng],
         popup=f"📍 Latitude: {lat}, Longitude: {lng}",
-        icon=folium.Icon(icon='info-sign', color="purple")
+        icon=folium.Icon(icon="info-sign", color="purple"),
     ).add_to(map_obj)
     return map_obj._repr_html_()
 
 
-def interface(lat, lng):
+def display_map(lat, lng):
+    """Display the user's location on a map."""
     map_html = plot_map(lat, lng)
-    with st.chat_message('ai'):
-        st.success(f"📍 Latitude: {lat}, Longitude: {lng}")
-    
-    with st.expander("Displaying your current location 🗺", expanded=True):
-        components.html(map_html, height=350)
+    st.success(f"📍 Detected Location: Latitude {lat}, Longitude {lng}")
+    with st.expander("Map of your current location 🗺", expanded=True):
+        components.html(map_html, height=400)
 
 
-def load_lottie(path):
-    with open(path, 'r') as file:
-        return json.load(file)
-
-
-def main_interface(lat, lng):
-    system_name = platform.system()
-    st.markdown(f"System Detected: {system_name}")
-    
-    # Lottie animation spinner (if animation file is available)
-    if "key" not in st.session_state:
-        st.session_state.key = True
-
-    if st.session_state.key:
-        with st.spinner("Loading..."):
-            time.sleep(4)
-        st.session_state.key = False
-
-    if not st.session_state.key:
-        try:
-            interface(lat, lng)
-        except Exception as e:
-            st.error(f"Unable to retrieve location: {e}")
-
-
-# Main app
-st.title("Where are you?? 🗺")
-
-# JavaScript Geolocation API
-components.html("""
+# JavaScript to fetch geolocation
+geolocation_script = """
 <script>
+    // Fetch the user's location using the browser's Geolocation API
     navigator.geolocation.getCurrentPosition(
         function(position) {
-            const coords = {
+            const locationData = {
                 lat: position.coords.latitude,
                 lng: position.coords.longitude
             };
-            const data = JSON.stringify(coords);
+            // Send the location data back to Streamlit
+            const data = JSON.stringify(locationData);
             window.parent.postMessage(data, "*");
         },
         function(error) {
-            const err = { error: error.message };
-            window.parent.postMessage(JSON.stringify(err), "*");
+            const errorData = { error: error.message };
+            window.parent.postMessage(JSON.stringify(errorData), "*");
         }
     );
 </script>
-""", height=0, width=0)
+"""
 
-# Placeholder to receive coordinates
+# Streamlit app starts here
+st.title("Browser-based Location Detection 🌍")
+
+# Inject JavaScript into the Streamlit app
+components.html(geolocation_script, height=0, width=0)
+
+# Placeholder for detected location
 location_placeholder = st.empty()
 
-# Receive message from JavaScript
-message = st.session_state.get("location_message", None)
-if message is None:
-    message = st.text_input("Paste location details here (if auto-detection fails):")
+# Wait for geolocation data to be sent back
+location_data = st.experimental_get_query_params().get("location", [None])[0]
 
-# Wait for location data
-try:
-    location_data = st.session_state.get("location_message", None)
-    if location_data:
-        location_json = json.loads(location_data)
-        lat, lng = location_json.get("lat"), location_json.get("lng")
-        st.session_state["location_message"] = location_data
-    elif message:
-        location_json = json.loads(message)
-        lat, lng = location_json.get("lat"), location_json.get("lng")
-        st.session_state["location_message"] = message
-    else:
-        st.warning("Waiting for location data...")
-        st.stop()
-except Exception as e:
-    st.error("Unable to parse location data. Please try again.")
-    st.stop()
+# Retrieve location data from the session or the browser's message
+if "location" not in st.session_state:
+    st.session_state["location"] = None
 
-# Render the interface
-main_interface(lat, lng)
+if location_data:
+    st.session_state["location"] = location_data
+
+# Check if location data is available
+if st.session_state["location"]:
+    try:
+        location_json = json.loads(st.session_state["location"])
+        if "error" in location_json:
+            st.error(f"Error fetching location: {location_json['error']}")
+        else:
+            lat, lng = location_json.get("lat"), location_json.get("lng")
+            display_map(lat, lng)
+    except Exception as e:
+        st.error(f"Error parsing location data: {e}")
+else:
+    st.info("Waiting for location data... Please allow location access in your browser.")
