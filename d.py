@@ -1,79 +1,83 @@
 import folium
+import geocoder
 import json
+import time
+import os
+import pyttsx3
+import threading
+from playsound import playsound
+from gtts import gTTS
 import streamlit as st
+from streamlit_lottie import st_lottie_spinner
 import streamlit.components.v1 as components
 
 
-def plot_map(lat, lng):
-    """Plot a map centered on the given latitude and longitude."""
-    map_center = [lat, lng]
-    map_obj = folium.Map(location=map_center, zoom_start=15, control_scale=True)
-    folium.Marker(
-        location=[lat, lng],
-        popup=f"📍 Latitude: {lat}, Longitude: {lng}",
-        icon=folium.Icon(icon="info-sign", color="purple"),
-    ).add_to(map_obj)
-    return map_obj._repr_html_()
+def plot_map(loca):
+     map_center=[22.5626,88.363]
+     current_loc=[loca.lat,loca.lng]
+     map=folium.Map(location=map_center, zoom_start=8,control_scale=True,width=700)
+     html_map=folium.Marker(
+          location=current_loc,
+          popup=f"{loca.city}, {loca.state}",
+          icon=folium.Icon(icon='info-sign',color="purple")
+     ).add_to(map)
+     html_map.save("cur_map.html")
+
+def interface(location):
+    plot_map(location)
+    with st.chat_message('ai'):
+            st.success(f"""📍{location.city}, {location.state}""")
+            st.warning(f"""📍 Latitude: {location.lat}, latitude: {location.lng}""")
+        
+    with open("cur_map.html",'r') as f:
+        map_html=f.read()
+    with st.expander("Displaying your current location 🗺",expanded=True):
+            components.html(map_html,height=350)
 
 
-def display_map(lat, lng):
-    """Display the user's location on a map."""
-    map_html = plot_map(lat, lng)
-    st.success(f"📍 Detected Location: Latitude {lat}, Longitude {lng}")
-    with st.expander("Map of your current location 🗺", expanded=True):
-        components.html(map_html, height=400)
+def load_lottie(path):
+      with open(path,'r') as rr:
+            return json.load(rr)
 
 
-# JavaScript to fetch geolocation
-geolocation_script = """
-<script>
-    // Fetch the user's location using the browser's Geolocation API
-    navigator.geolocation.getCurrentPosition(
-        function(position) {
-            const locationData = {
-                lat: position.coords.latitude,
-                lng: position.coords.longitude
-            };
-            // Send the location data back to Streamlit
-            const data = JSON.stringify(locationData);
-            window.parent.postMessage(data, "*");
-        },
-        function(error) {
-            const errorData = { error: error.message };
-            window.parent.postMessage(JSON.stringify(errorData), "*");
-        }
-    );
-</script>
-"""
+def play_audio():
+    #engine=pyttsx3.init()
+    #engine.say(content)
+    #engine.runAndWait()
+    playsound("audio_op.mp3")
 
-# Streamlit app starts here
-st.title("Browser-based Location Detection 🌍")
+lottie=load_lottie("Animation - 1735974601572.json")  
+st.title("Where are you ?? 🗺")
 
-# Inject JavaScript into the Streamlit app
-components.html(geolocation_script, height=0, width=0)
-
-# Placeholder for detected location
-location_placeholder = st.empty()
-
-# Retrieve location data from the session or the browser's message
-if "location" not in st.session_state:
-    st.session_state["location"] = None
-
-location_data = st.query_params.get("location", [None])[0]
-
-if location_data:
-    st.session_state["location"] = location_data
-
-# Check if location data is available
-if st.session_state["location"]:
-    try:
-        location_json = json.loads(st.session_state["location"])
-        if "error" in location_json:
-            st.error(f"Error fetching location: {location_json['error']}")
-        else:
-            lat, lng = location_json.get("lat"), location_json.get("lng")
-            display_map(lat, lng)
-    except Exception as e:
-        st.error(f"Error parsing location data: {e}")
+location = geocoder.ip('me')
+if location and location.ok:
+      city,state,lat,lng=location.city,location.state,location.lat,location.lng
 else:
-    st.info("Waiting for location data... Please allow location access in your browser.")
+    city,state,lat,lng=None,None,None,None
+
+user_loc=f""" Hello user do you know exact latitude and longitude of your current location ?? Your are currently in{city}, {state}. Your Latitude is {lat}, your longitude is {lng}"""
+
+audio=gTTS(text=user_loc,lang="en")
+path="audio_op.mp3"
+if os.path.exists(path):
+    os.remove(path)
+audio.save(path)
+audio_thread=threading.Thread(target=play_audio,args=())
+audio_thread.start()
+
+if "key" not in st.session_state:
+      st.session_state.key=True
+
+if st.session_state.key:
+    with st_lottie_spinner(lottie,width=600,height=400):
+            time.sleep(4)
+    st.session_state.key=False
+
+
+if not st.session_state.key:
+    try:
+        if location and location.ok:
+            interface(location)
+            st.session_state.key=False
+    except:
+            st.error("Unable to retrieve location. Check your internet connection or try again.")
