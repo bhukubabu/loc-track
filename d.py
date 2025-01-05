@@ -63,7 +63,7 @@ if os.path.exists(path):
     os.remove(path)
 try:
      audio.save(path)
-     st.success("----")
+     st.success("AUDIO SAVED")
 except:
      st.error("XXXX")
 audio_thread=threading.Thread(target=play_audio,args=())
